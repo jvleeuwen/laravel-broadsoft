@@ -1,6 +1,6 @@
 <?php
 
-namespace Jvleeuwen\Cspreporter\tests;
+namespace Jvleeuwen\Cspreporter\tests\CallCenterMonitoring;
 
 use Mockery as m;
 use callcentermonitoring;
@@ -89,17 +89,49 @@ class CallCenterMonitoringTest extends TestCase
 
         $xml = simplexml_load_string($req, null, 0, 'xsi', true);
         $event = callcentermonitoring::GetEventType($xml, $req);
-        $this->assertSame($event, 'blaat');
+        $expected = [
+            'eventType' => 'CallCenterMonitoringEvent',
+            'eventID' => '12345abc-12ab-12ab-12av-12345abcdefg',
+            'sequenceNumber' => 1,
+            'subscriptionId' => '12345abc-12ab-12ab-12av-12345abcdefg',
+            'targetId' => 'targetId',
+            'averageHandlingTime' => 1,
+            'expectedWaitTime' => 2,
+            'averageSpeedOfAnswer' => 3,
+            'longestWaitTime' => 4,
+            'numCallsInQueue' => 5,
+            'numAgentsAssigned' => 6,
+            'numAgentsStaffed' => 7,
+            'numStaffedAgentsIdle' => 8,
+            'numStaffedAgentsUnavailable' => 9
+        ];
+        $this->assertSame($event, $expected);
     }
 
-    // /**
-    // * @test
-    // */
-    // public function it_can_get_the_event_type_from_xml()
-    // {
-    //     $this->markTestIncomplete('This test has not been implemented yet.');
-    // }
+    /**
+    * @test
+    */
+    public function it_can__not_parse_call_center_monitoring_event()
+    {
+        $req = File::get('tests/broken.xml');
 
+        $xml = simplexml_load_string($req, null, 0, 'xsi', true);
+        $event = callcentermonitoring::GetEventType($xml, $req);
+        $this->assertSame($event, 'class CallCenterMonitoringEventBLAAT not found');
+    }
+
+    /**
+    * @test
+    */
+    public function it_can__not_get_the_event_type()
+    {
+        // $req = File::get('tests/broken.xml');
+
+        // $xml = simplexml_load_string($req, null, 0, 'xsi', true);
+        $event = callcentermonitoring::CallCenterMonitoringEvent("bogus xml");
+        $this->assertSame($event, 'can not parse event: CallCenterMonitoringEvent');
+        // $this->expectException(ErrorException::class);
+    }
     // /**
     // * @test
     // */
@@ -118,27 +150,11 @@ class CallCenterMonitoringTest extends TestCase
     // }
 
     // /**
-    //  * @test
-    //  */
-    // public function it_can_reached_the_test_function()
-    // {
-    //     $this->assertSame(cspreporter::test(), 'u have reached the test function');
-    // }
-
-    // /**
     //  * *@test
     //  */
     // public function it_can_load_rss()
     // {
     //     $this->assertInternalType('array', cspreporter::uri($this->file));
-    // }
-
-    // /**
-    //  * *@test
-    //  */
-    // public function it_can_get_actual_test_xml_from_tests_dir()
-    // {
-    //     $this->assertCount(1, cspreporter::file($this->file));
     // }
 
     // /**
@@ -166,21 +182,5 @@ class CallCenterMonitoringTest extends TestCase
     //         $this->assertInternalType('string', $item['link']);
     //         $this->assertInternalType('array', $item['services']);
     //     }
-    // }
-
-    // /**
-    //  * *@test
-    //  */
-    // public function it_can_run_the_full_cycle()
-    // {
-    //     $this->assertInternalType('array', cspreporter::uri($this->file));
-    // }
-
-    // /**
-    //  * *@test
-    //  */
-    // public function it_can_not_parse_uri_feed()
-    // {
-    //     $this->assertSame('invalid XML', cspreporter::uri('i dont exist'));
     // }
 }

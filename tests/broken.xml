@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsi:Event xmlns:xsi="http://schema.broadsoft.com/xsi" xmlns:xsi1="http://www.w3.org/2001/XMLSchema-instance" xsi1:type="xsi:SubscriptionEvent">
+    <xsi:eventID>12345abc-12ab-12ab-12av-12345abcdefg</xsi:eventID>
+  <xsi:sequenceNumber>1</xsi:sequenceNumber>
+  <xsi:userId>userId</xsi:userId>
+  <xsi:externalApplicationId>CallCenterMonitoring</xsi:externalApplicationId>
+  <xsi:subscriptionId>12345abc-12ab-12ab-12av-12345abcdefg</xsi:subscriptionId>
+  <xsi:httpContact>
+    <xsi:uri>uri</xsi:uri>
+  </xsi:httpContact>
+  <xsi:targetId>targetId</xsi:targetId>
+  <xsi:eventData xsi1:type="xsi:CallCenterMonitoringEventBLAAT">
+    <xsi:monitoringStatus>
+      <xsi:averageHandlingTime>
+        <xsi:value>BLAAT</xsi:value>
+      </xsi:averageHandlingTime>
+      <xsi:expectedWaitTime>
+        <xsi:value>2</xsi:value>
+      </xsi:expectedWaitTime>
+      <xsi:averageSpeedOfAnswer>
+        <xsi:value>3</xsi:value>
+      </xsi:averageSpeedOfAnswer>
+      <xsi:longestWaitTime>
+        <xsi:value>4</xsi:value>
+      </xsi:longestWaitTime>
+      <xsi:numCallsInQueue>
+        <xsi:value>5</xsi:value>
+      </xsi:numCallsInQueue>
+      <xsi:numAgentsAssigned>6</xsi:numAgentsAssigned>
+      <xsi:numAgentsStaffed>7</xsi:numAgentsStaffed>
+      <xsi:numStaffedAgentsIdle>8</xsi:numStaffedAgentsIdle>
+      <xsi:numStaffedAgentsUnavailable>9</xsi:numStaffedAgentsUnavailable>
+    </xsi:monitoringStatus>
+  </xsi:eventData>
+</xsi:Event>

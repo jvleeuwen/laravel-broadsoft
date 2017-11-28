@@ -3,6 +3,8 @@
 namespace Jvleeuwen\Broadsoft;
 
 use Illuminate\Support\ServiceProvider;
+use Jvleeuwen\Broadsoft\Services\XmlService;
+use Jvleeuwen\Broadsoft\Events\Broadsoft\ErrorEvent;
 use Jvleeuwen\Broadsoft\Services\CallCenterMonitoringService;
 use Jvleeuwen\Broadsoft\Contracts\CallCenterMonitoringContract;
 use Jvleeuwen\Broadsoft\Events\Broadsoft\CallCenterMonitoringEvent;
@@ -33,14 +35,18 @@ class BroadsoftServiceProvider extends ServiceProvider
         $this->app->singleton(CallCenterMonitoringContract::class, CallCenterMonitoringRepository::class);
 
         // $this->app->bind(CallCenterMonitoringContract::class, function () {
-        //     $dependancy = new CallCenterMonitoringContract();
-        //     return new CallCenterMonitoringRepository($dependancy);// inject what ever u need
+        //     $contract = new CallCenterMonitoringContract();
+        //     return new CallCenterMonitoringRepository($contract);// inject what ever u need
         // });
 
         $this->app->make('Jvleeuwen\Broadsoft\Controllers\CallCenterMonitoringController');
 
         $this->app->singleton('callcentermonitoring', function ($app) {
             return new CallCenterMonitoringService($app->make(CallCenterMonitoringRepository::class));
+        });
+
+        $this->app->singleton('xml', function () {
+            return new XmlService;
         });
     }
 
@@ -51,6 +57,6 @@ class BroadsoftServiceProvider extends ServiceProvider
     */
     public function provides()
     {
-        return ['callcentermonitoring'];
+        return ['callcentermonitoring', 'xml'];
     }
 }

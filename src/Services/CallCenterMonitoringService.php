@@ -4,7 +4,9 @@ namespace Jvleeuwen\Broadsoft\Services;
 
 use Illuminate\Support\Facades\Log;
 // use Jvleeuwen\Broadsoft\Events\Broadsoft\ErrorEvent;
+use Jvleeuwen\Broadsoft\Events\Broadsoft\ErrorEvent;
 use Jvleeuwen\Broadsoft\Contracts\CallCenterMonitoringContract;
+use Jvleeuwen\Broadsoft\Events\Broadsoft\CallCenterMonitoringEvent;
 
 class CallCenterMonitoringService
 {
@@ -24,7 +26,8 @@ class CallCenterMonitoringService
 
         try {
             return $this->$type($xml); # Call the type function like AgentStateEvent for further XML handling
-        } catch (\BadMethodCallException $e) {
+        // } catch (\BadMethodCallException $e) {
+        } catch (\Error $e) {
             $data = array(
                 'class' => __CLASS__,
                 'method' => $type,
@@ -34,8 +37,8 @@ class CallCenterMonitoringService
             );
             // $this->email->sendDebug( __CLASS__, $type, json_encode($xml), (string)$e, $req);
             Log::error($e);
-            // event(new ErrorEvent((string)$e));
-            return null;
+            event(new ErrorEvent(['error' => (string)$e]));
+            return('class ' .$type . ' not found');
         }
     }
 
@@ -61,13 +64,13 @@ class CallCenterMonitoringService
                 "numStaffedAgentsIdle" => (int)$xml->eventData->monitoringStatus->numStaffedAgentsIdle,
                 "numStaffedAgentsUnavailable" => (int)$xml->eventData->monitoringStatus->numStaffedAgentsUnavailable,
             );
-            $this->CallCenterMonitoring->SaveToDB($CallCenterMonitoringEvent);
-            event(new \CallCenterMonitoringEvent($CallCenterMonitoringEvent));
-            return null;
+            // $this->CallCenterMonitoring->SaveToDB($CallCenterMonitoringEvent);
+            event(new CallCenterMonitoringEvent($CallCenterMonitoringEvent));
+            return $CallCenterMonitoringEvent;
         } catch (\Exception $e) {
             Log::error($e);
-            // event(new ErrorEvent((string)$e));
-            return $e;
+            event(new ErrorEvent(['error' => (string)$e]));
+            return ('can not parse event: CallCenterMonitoringEvent');
             return null;
         }
     }
@@ -86,15 +89,13 @@ class CallCenterMonitoringService
                 "subscriptionId" => (string)$xml->subscriptionId,
                 "externalApplicationId" => (string)$xml->externalApplicationId,
                 "httpContact" => (string)$xml->httpContact->uri,
-                // "debug_dateAdded" => (string)Carbon::now(),
-                // "debug_dateShowedOnScreen" => (string)""
             );
-            event(new \CallCenterMonitoringEvent($SubscriptionTerminatedEvent));
-            return null;
+            event(new CallCenterMonitoringEvent($SubscriptionTerminatedEvent));
+            return $SubscriptionTerminatedEvent;
         } catch (\Exception $e) {
             Log::error($e);
-            // event(new ErrorEvent((string)$e));
-            return null;
+            event(new ErrorEvent(['error' =>(string)$e]));
+            return ('can not parse event: SubscriptionTerminatedEvent');
         }
     }
 }
