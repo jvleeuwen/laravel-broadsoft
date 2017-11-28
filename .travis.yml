@@ -1,0 +1,26 @@
+language: php
+
+php:
+  - 7.1
+
+sudo: true
+
+install:
+- travis_retry composer install --no-interaction --prefer-source
+
+# before_script:
+#   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+#   - chmod +x ./cc-test-reporter
+#   - ./cc-test-reporter before-build
+
+script:
+  - mkdir -p build/logs
+  - ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+
+after_script:
+  - CODECLIMATE_REPO_TOKEN=$CC_TEST_REPORTER_ID ./vendor/bin/test-reporter -v
+#  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+
+after_success:
+- travis_retry php vendor/bin/coveralls -v
+- ./vendor/bin/test-reporter -v
