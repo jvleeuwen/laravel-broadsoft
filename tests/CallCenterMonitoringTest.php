@@ -45,7 +45,7 @@ class CallCenterMonitoringTest extends TestCase
         parent::setUp();
         $this->setUpMocks();
         $this->service_provider = new BroadsoftServiceProvider($this->application_mock);
-        $this->CallCenterMonitoringContract = m::mock('Jvleeuwen\Broadsoft\Contracts\CallCenterMonitoringContract');
+        // $this->CallCenterMonitoringContract = m::mock('Jvleeuwen\Broadsoft\Contracts\CallCenterMonitoringContract');
     }
 
     /**
@@ -85,43 +85,12 @@ class CallCenterMonitoringTest extends TestCase
     */
     public function it_can_parse_call_center_monitoring_event()
     {
-        // $this->instance('Jvleeuwen\Broadsoft\Contracts\CallCenterMonitoringContract', $this->CallCenterMonitoringContract);
-        // $this->CallCenterMonitoringContract
-        //     ->shouldReceive('SaveToDB')
-        //     ->once()->andReturn([]);
-
-
         $req = File::get('docs/XSI_messages/CallCenterMonitoring/CallCenterMonitoringEvent.xml');
 
         $xml = simplexml_load_string($req, null, 0, 'xsi', true);
         $event = callcentermonitoring::GetEventType($xml, $req);
         $this->assertSame($event, 'blaat');
-        // $file = File::get('docs/XSI_messages/CallCenterMonitoring/CallCenterMonitoringEvent.xml');
-        // $xml = simplexml_load_string($file, null, 0, 'xsi', true);
-        // $x = $ccmController->CallCenterMonitoringEvent($xml);
-        // // dd($x);
-        // $this->markTestIncomplete('This test has not been implemented yet.');
     }
-
-    // /**
-    // * @test
-    // */
-    // public function it_can_get_the_service_provider()
-    // {
-    //     $CallCenterMonitoring = Mockery::mock('Jvleeuwen\Broadsoft\Controllers\CallCenterMonitoringController');
-    //     $CallCenterMonitoring->shouldReceive(['Incomming','GetEventType', 'CallCenterMonitoringEvent', 'SubscriptionTerminatedEvent']);
-    // }
-
-    // /**
-    // * @test
-    // */
-    // public function it_can_parse_incomming_xml()
-    // {
-    //     $ccmController = new CallCenterMonitoringController;
-    //     $x = $ccmController->Incomming('data');
-    //     // $CallCenterMonitoring = Mockery::mock('Jvleeuwen\Broadsoft\Controllers\CallCenterMonitoringController');
-    //     // $CallCenterMonitoring->shouldReceive(['Incomming','GetEventType', '']);
-    // }
 
     // /**
     // * @test

@@ -67,7 +67,6 @@ class CallCenterMonitoringService
         } catch (\Exception $e) {
             Log::error($e);
             // event(new ErrorEvent((string)$e));
-            dd($e);
             return $e;
             return null;
         }
