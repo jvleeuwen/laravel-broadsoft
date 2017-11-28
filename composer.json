@@ -1,0 +1,40 @@
+{
+    "name": "jvleeuwen/broadsoft",
+    "description": "Laravel broadsoft implementation",
+    "type": "package",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jelle van Leeuwen",
+            "email": "jvleeuwen@routit.nl"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=7.0.0"
+    },
+    "require-dev": {
+        "filp/whoops": "~2.0",
+        "fzaninotto/faker": "~1.4",
+        "mockery/mockery": "~1.0",
+        "phpunit/phpunit": "~6.0",
+        "orchestra/testbench-browser-kit": "~3.5",
+        "php-coveralls/php-coveralls": "^1.0",
+        "codeclimate/php-test-reporter": "dev-master"
+    },
+    "autoload": {
+        "classmap": [],
+        "psr-4": {
+            "Jvleeuwen\\Broadsoft\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": [],
+            "providers": [
+                "Jvleeuwen\\Broadsoft\\BroadsoftServiceProvider"
+            ]
+        }
+    }
+
+}
