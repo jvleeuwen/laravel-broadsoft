@@ -3,15 +3,16 @@
 namespace Jvleeuwen\Cspreporter\tests\Services;
 
 use Mockery as m;
-use callcentermonitoring;
 use callcenterrepository;
+use callcentermonitoring;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\File;
 use Jvleeuwen\Broadsoft\Facades\XmlFacade;
 use Jvleeuwen\Broadsoft\BroadsoftServiceProvider;
 use Jvleeuwen\Broadsoft\Facades\CallCenterMonitoringFacade;
-use Jvleeuwen\Broadsoft\Repositories\CallCenterMonitoringRepository;
 use jvleeuwen\broadsoft\Repositories\BsCallCenterRepository;
+use Jvleeuwen\Broadsoft\Services\CallCenterMonitoringService;
+use Jvleeuwen\Broadsoft\Repositories\CallCenterMonitoringRepository;
 use \Jvleeuwen\Broadsoft\Models\CallCenterMonitoring as CallCenterMonitoringModel;
 
 class RepositoryTest extends TestCase
@@ -70,7 +71,6 @@ class RepositoryTest extends TestCase
     */
     public function it_can_save_data_to_the_database()
     {
-        $repo = m::mock(CallCenterMonitoringRepository::class)->shouldReceive('SaveToDB')->andReturn(1);
-        $this->assertTrue($repo);
+        m::mock(CallCenterMonitoringService::class)->shouldReceive('GetEventType')->once()->andReturn(true);
     }
 }
