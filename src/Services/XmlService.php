@@ -12,6 +12,5 @@ class XmlService
     public function type($xml)
     {
         return str_replace('xsi:', '', (string)$xml->eventData[0]->attributes('xsi1', true)->type);
-
     }
 }
