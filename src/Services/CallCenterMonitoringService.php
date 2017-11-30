@@ -64,10 +64,8 @@ class CallCenterMonitoringService
                 "numStaffedAgentsIdle" => (int)$xml->eventData->monitoringStatus->numStaffedAgentsIdle,
                 "numStaffedAgentsUnavailable" => (int)$xml->eventData->monitoringStatus->numStaffedAgentsUnavailable,
             );
-            // $this->CallCenterMonitoring->SaveToDB($CallCenterMonitoringEvent);
             event(new CallCenterMonitoringEvent($CallCenterMonitoringEvent));
             return $CallCenterMonitoringEvent;
-            // return null;
         } catch (\Exception $e) {
             Log::error($e);
             event(new ErrorEvent(['error' => (string)$e]));
@@ -98,5 +96,10 @@ class CallCenterMonitoringService
             event(new ErrorEvent(['error' =>(string)$e]));
             return ('can not parse event: SubscriptionTerminatedEvent');
         }
+    }
+
+    public function SaveToDB($data)
+    {
+        $this->CallCenterMonitoring->SaveToDB($data);
     }
 }

@@ -15,6 +15,10 @@ class CreateCallCenterMonitoringsTable extends Migration
     {
         Schema::create('call_center_monitorings', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('eventType');
+            $table->string('eventID');
+            $table->integer('sequenceNumber');
+            $table->string('subscriptionId');
             $table->string('targetId');
             $table->integer('averageHandlingTime');
             $table->integer('expectedWaitTime');
@@ -28,7 +32,6 @@ class CreateCallCenterMonitoringsTable extends Migration
             $table->timestamps();
         });
     }
-
     /**
      * Reverse the migrations.
      *

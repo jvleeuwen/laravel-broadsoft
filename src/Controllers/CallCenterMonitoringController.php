@@ -31,12 +31,7 @@ class CallCenterMonitoringController extends Controller
     {
         $xml = $this->xml->parse($request->getContent());
         $type = $this->xml->type($xml);
-        return $this->broadsoft->$type($xml);
-        // return [$xml, $type];
-        // return the data here restructured or to null.
-        // make the request to save to the database asa well
-        // $val = $this->xml::parser($request);
-        // dd($val);
-        // detecteer welke class er aangeroepen moet worden
+        $data = $this->broadsoft->$type($xml);
+        return $this->broadsoft->SaveToDB($data);
     }
 }

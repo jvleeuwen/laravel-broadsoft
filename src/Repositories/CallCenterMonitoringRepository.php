@@ -10,6 +10,10 @@ class CallCenterMonitoringRepository implements CallCenterMonitoringContract
 {
     public function SaveToDB($CallCenterMonitoringArray)
     {
+        $eventType = (string)$CallCenterMonitoringArray['eventType'];
+        $eventID = (string)$CallCenterMonitoringArray['eventID'];
+        $sequenceNumber = (integer)$CallCenterMonitoringArray['sequenceNumber'];
+        $subscriptionId = (string)$CallCenterMonitoringArray['subscriptionId'];
         $targetId = (string)$CallCenterMonitoringArray['targetId'];
         $averageHandlingTime = (int)$CallCenterMonitoringArray['averageHandlingTime'];
         $expectedWaitTime = (int)$CallCenterMonitoringArray['expectedWaitTime'];
@@ -24,6 +28,10 @@ class CallCenterMonitoringRepository implements CallCenterMonitoringContract
         $ExistingCallCenter = CallCenterMonitoring::where('targetId', $targetId)->first();
         if (! $ExistingCallCenter) {
             $NewCallcenter = new CallCenterMonitoring;
+            $NewCallcenter->eventType = $eventType;
+            $NewCallcenter->eventID = $eventID;
+            $NewCallcenter->sequenceNumber = $sequenceNumber;
+            $NewCallcenter->subscriptionId = $subscriptionId;
             $NewCallcenter->targetID = $targetId;
             $NewCallcenter->averageHandlingTime = $averageHandlingTime;
             $NewCallcenter->expectedWaitTime = $expectedWaitTime;
@@ -36,6 +44,10 @@ class CallCenterMonitoringRepository implements CallCenterMonitoringContract
             $NewCallcenter->numStaffedAgentsUnavailable = $numStaffedAgentsUnavailable;
             $NewCallcenter->save();
         } else {
+            $ExistingCallCenter->eventType = $eventType;
+            $ExistingCallCenter->eventID = $eventID;
+            $ExistingCallCenter->sequenceNumber = $sequenceNumber;
+            $ExistingCallCenter->subscriptionId = $subscriptionId;
             $ExistingCallCenter->targetID = $targetId;
             $ExistingCallCenter->averageHandlingTime = $averageHandlingTime;
             $ExistingCallCenter->expectedWaitTime = $expectedWaitTime;
