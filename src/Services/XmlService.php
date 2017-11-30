@@ -6,6 +6,7 @@ class XmlService
 {
     public function parse($req)
     {
+        // dd($req);
         return simplexml_load_string($req, null, 0, 'xsi', true);
     }
 

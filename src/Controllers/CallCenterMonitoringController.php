@@ -5,29 +5,34 @@ namespace Jvleeuwen\Broadsoft\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Jvleeuwen\Broadsoft\Services\XmlService;
 use Jvleeuwen\Broadsoft\Events\Broadsoft\ErrorEvent;
+use Jvleeuwen\Broadsoft\Services\CallCenterMonitoringService;
 use Jvleeuwen\Broadsoft\Contracts\CallCenterMonitoringContract;
 use Jvleeuwen\Broadsoft\Events\Broadsoft\CallCenterMonitoringEvent;
-use xml;
+
 // use jvleeuwen\broadsoft\Controllers\EmailController;
 
 
 class CallCenterMonitoringController extends Controller
 {
-    // private $xml;
+    private $xml;
 
-    // public function __construct(XmlFacade $xml)
-    // {
-    //     $this->xml = $xml;
-    // }
+    public function __construct(XmlService $xml, CallCenterMonitoringService $broadsoft)
+    {
+        $this->xml = $xml;
+        $this->broadsoft = $broadsoft;
+    }
 
     /*
         Handle incomming XML messages for the Call Center Agent
     */
     public function Incomming(Request $request)
     {
-        $xml = xml::parse($request);
-        $type = xml::type($xml);
+        $xml = $this->xml->parse($request->getContent());
+        $type = $this->xml->type($xml);
+        return $this->broadsoft->$type($xml);
+        // return [$xml, $type];
         // return the data here restructured or to null.
         // make the request to save to the database asa well
         // $val = $this->xml::parser($request);
