@@ -5,6 +5,7 @@ namespace Jvleeuwen\Broadsoft\Repositories;
 use Jvleeuwen\Broadsoft\Database\Models\bsCallcenterMonitoring;
 use Jvleeuwen\Broadsoft\Models\CallCenterMonitoring;
 use Jvleeuwen\Broadsoft\Contracts\CallCenterMonitoringContract;
+use Jvleeuwen\Broadsoft\Models\Callcenter;
 
 class CallCenterMonitoringRepository implements CallCenterMonitoringContract
 {
@@ -61,5 +62,10 @@ class CallCenterMonitoringRepository implements CallCenterMonitoringContract
             $ExistingCallCenter->save();
         }
         return true;
+    }
+
+    public function GetCallCentersBySlug($slug)
+    {
+        return Callcenter::where('slug', $slug)->get();
     }
 }
