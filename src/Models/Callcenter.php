@@ -9,7 +9,7 @@ class Callcenter extends Model
     public function monitoring()
     {
         return $this->hasOne(
-            'Jvleeuwen\Broadsoft\Models\sCallcenterMonitoring',
+            'Jvleeuwen\Broadsoft\Models\CallcenterMonitoring',
             'targetId',
             'userId'
         );
