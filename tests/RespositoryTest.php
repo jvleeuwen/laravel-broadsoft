@@ -1,6 +1,6 @@
 <?php
 
-namespace Jvleeuwen\Cspreporter\tests\Services;
+namespace Jvleeuwen\Cspreporter\tests;
 
 use Mockery as m;
 use callcenterrepository;
@@ -66,11 +66,11 @@ class RepositoryTest extends TestCase
         $this->application_mock = m::mock(Application::class);
     }
 
-    /**
-    * @test
-    */
-    public function it_can_save_data_to_the_database()
-    {
-        m::mock(CallCenterMonitoringService::class)->shouldReceive('GetEventType')->once()->andReturn(true);
-    }
+    // /**
+    // * @test
+    // */
+    // public function it_can_save_data_to_the_database()
+    // {
+    //     m::mock(CallCenterMonitoringService::class)->shouldReceive('GetEventType')->once()->andReturn(true);
+    // }
 }

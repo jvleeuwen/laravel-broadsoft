@@ -66,8 +66,8 @@ class CallCenterMonitoringService
             );
             // $this->CallCenterMonitoring->SaveToDB($CallCenterMonitoringEvent);
             event(new CallCenterMonitoringEvent($CallCenterMonitoringEvent));
-            // return $CallCenterMonitoringEvent;
-            return null;
+            return $CallCenterMonitoringEvent;
+            // return null;
         } catch (\Exception $e) {
             Log::error($e);
             event(new ErrorEvent(['error' => (string)$e]));

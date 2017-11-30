@@ -88,7 +88,7 @@ class CallCenterMonitoringTest extends TestCase
         $req = File::get('docs/XSI_messages/CallCenterMonitoring/CallCenterMonitoringEvent.xml');
 
         $xml = simplexml_load_string($req, null, 0, 'xsi', true);
-        $event = callcentermonitoring::GetEventType($xml, $req);
+        $event = callcentermonitoring::CallCenterMonitoringEvent($xml, $req);
         $expected = [
             'eventType' => 'CallCenterMonitoringEvent',
             'eventID' => '12345abc-12ab-12ab-12av-12345abcdefg',
@@ -114,7 +114,6 @@ class CallCenterMonitoringTest extends TestCase
     public function it_can__not_parse_call_center_monitoring_event()
     {
         $req = File::get('tests/broken.xml');
-
         $xml = simplexml_load_string($req, null, 0, 'xsi', true);
         $event = callcentermonitoring::GetEventType($xml, $req);
         $this->assertSame($event, 'class CallCenterMonitoringEventBLAAT not found');
