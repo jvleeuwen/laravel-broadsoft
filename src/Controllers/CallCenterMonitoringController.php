@@ -4,15 +4,10 @@ namespace Jvleeuwen\Broadsoft\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Log;
 use Jvleeuwen\Broadsoft\Services\XmlService;
-use Jvleeuwen\Broadsoft\Events\Broadsoft\ErrorEvent;
 use Jvleeuwen\Broadsoft\Services\CallCenterMonitoringService;
-use Jvleeuwen\Broadsoft\Contracts\CallCenterMonitoringContract;
-use Jvleeuwen\Broadsoft\Events\Broadsoft\CallCenterMonitoringEvent;
 
 // use jvleeuwen\broadsoft\Controllers\EmailController;
-
 
 class CallCenterMonitoringController extends Controller
 {
@@ -25,7 +20,7 @@ class CallCenterMonitoringController extends Controller
     }
 
     /*
-        Handle incomming XML messages for the Call Center Agent
+        Handle incomming XML messages for the Call Center Monitoring
     */
     public function Incomming(Request $request)
     {
