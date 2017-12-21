@@ -19,20 +19,20 @@ class BroadsoftServiceProvider extends ServiceProvider
     {
         $this->loadRoutesFrom(__DIR__ . '/../routes/broadsoft.php');
         $this->loadMigrationsFrom(__DIR__ . '/../migrations');
-        $this->publishes([__DIR__ . '/../config/broadsoft.php' => config_path('broadsoft.php')]);
+        $this->publishes(['/../config/broadsoft.php' => config_path('broadsoft.php')]);
 
         /**
          * Queue components
          */
-        $this->publishes([__DIR__ . '/../assets/css/components/queue.css' => resource_path('assets/css/components/queue.css')], 'css');
-        $this->publishes([__DIR__ . '/../assets/js/components/Queue.vue' => resource_path('assets/js/components/Queue.vue')], 'vue');
-        $this->publishes([__DIR__ . '/../assets/js/components/QueueAgents.vue' => resource_path('assets/js/components/QueueAgents.vue')], 'vue');
+        $this->publishes(['/../assets/css/components/queue.css' => resource_path('assets/css/components/queue.css')], 'css');
+        $this->publishes(['/../assets/js/components/Queue.vue' => resource_path('assets/js/components/Queue.vue')], 'vue');
+        $this->publishes(['/../assets/js/components/QueueAgents.vue' => resource_path('assets/js/components/QueueAgents.vue')], 'vue');
 
         /**
          * Ticket components
          */
-        $this->publishes([__DIR__ . '/../assets/css/components/tickets.css' => resource_path('assets/css/components/tickets.css'), 'css']);
-        $this->publishes([__DIR__ . '../assets/js/components/Tickets.vue' => resource_path('assets/js/components/Tickets.vue')], 'vue');
+        $this->publishes(['/../assets/css/components/tickets.css' => resource_path('assets/css/components/tickets.css'), 'css']);
+        $this->publishes(['../assets/js/components/Tickets.vue' => resource_path('assets/js/components/Tickets.vue')], 'vue');
     }
 
     /**
