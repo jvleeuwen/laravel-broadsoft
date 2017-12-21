@@ -4,10 +4,8 @@ namespace Jvleeuwen\Broadsoft;
 
 use Illuminate\Support\ServiceProvider;
 use Jvleeuwen\Broadsoft\Services\XmlService;
-use Jvleeuwen\Broadsoft\Events\Broadsoft\ErrorEvent;
 use Jvleeuwen\Broadsoft\Services\CallCenterMonitoringService;
 use Jvleeuwen\Broadsoft\Contracts\CallCenterMonitoringContract;
-use Jvleeuwen\Broadsoft\Events\Broadsoft\CallCenterMonitoringEvent;
 use Jvleeuwen\Broadsoft\Repositories\CallCenterMonitoringRepository;
 
 class BroadsoftServiceProvider extends ServiceProvider
@@ -17,12 +15,23 @@ class BroadsoftServiceProvider extends ServiceProvider
      *
      * @return void
      */
-
     public function boot()
     {
-        $this->loadRoutesFrom(__DIR__.'/../routes/broadsoft.php');
-        $this->loadMigrationsFrom(__DIR__.'/../migrations');
+        $this->loadRoutesFrom(__DIR__ . '/../routes/broadsoft.php');
+        $this->loadMigrationsFrom(__DIR__ . '/../migrations');
         $this->publishes(['/../config/broadsoft.php' => config_path('broadsoft.php')]);
+
+        /**
+         * Queue components
+         */
+        $this->publishes(['/../assets/css/components/queue.css' => resource_path('assets/css/components/queue.css')], 'css');
+        $this->publishes(['/../assets/js/components/Queue.vue' => resource_path('assets/js/components/Queue.vue')], 'vue');
+        $this->publishes(['/../assets/js/components/QueueAgents.vue' => resource_path('assets/js/components/QueueAgents.vue')], 'vue');
+
+        /**
+         * Ticket components
+         */
+        $this->publishes(['/../assets/css/components/tickets.css' => resource_path('assets/css/components/tickets.css'), 'css']);
     }
 
     /**
@@ -33,11 +42,6 @@ class BroadsoftServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(CallCenterMonitoringContract::class, CallCenterMonitoringRepository::class);
-
-        // $this->app->bind(CallCenterMonitoringContract::class, function () {
-        //     $contract = new CallCenterMonitoringContract();
-        //     return new CallCenterMonitoringRepository($contract);// inject what ever u need
-        // });
 
         $this->app->make('Jvleeuwen\Broadsoft\Controllers\CallCenterMonitoringController');
 
