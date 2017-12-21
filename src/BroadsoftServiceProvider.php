@@ -32,7 +32,7 @@ class BroadsoftServiceProvider extends ServiceProvider
          * Ticket components
          */
         $this->publishes(['/../assets/css/components/tickets.css' => resource_path('assets/css/components/tickets.css'), 'css']);
-        $this->publishes(['../assets/js/components/Tickets.vue' => resource_path('assets/js/components/Tickets.vue')], 'vue');
+        $this->publishes([__DIR__ . '/assets/js/components/Tickets.vue' => resource_path('assets/js/components/Tickets.vue')], 'vue');
     }
 
     /**
