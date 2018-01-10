@@ -4,17 +4,15 @@ namespace Jvleeuwen\Cspreporter\tests\CallCenterMonitoring;
 
 use Mockery as m;
 use callcentermonitoring;
-use Orchestra\Testbench\TestCase;
+// use Orchestra\Testbench\TestCase;
+use Orchestra\Testbench\BrowserKit\TestCase;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Event;
 use Jvleeuwen\Broadsoft\BroadsoftServiceProvider;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Jvleeuwen\Broadsoft\Facades\CallCenterMonitoringFacade;
-use Jvleeuwen\Broadsoft\Controllers\CallCenterMonitoringController;
 
 class CallCenterMonitoringTest extends TestCase
 {
-
     /**
      * @var Mockery\Mock
      */
@@ -124,13 +122,62 @@ class CallCenterMonitoringTest extends TestCase
     */
     public function it_can__not_get_the_event_type()
     {
-        // $req = File::get('tests/broken.xml');
-
-        // $xml = simplexml_load_string($req, null, 0, 'xsi', true);
-        $event = callcentermonitoring::CallCenterMonitoringEvent("bogus xml");
+        $event = callcentermonitoring::CallCenterMonitoringEvent('bogus xml');
         $this->assertSame($event, 'can not parse event: CallCenterMonitoringEvent');
-        // $this->expectException(ErrorException::class);
     }
+
+    /**
+     * @test
+     */
+    public function it_can_parse_incomming_requests()
+    {
+        // $crawler = $this->post('bs/CallCenterMonitoring', [
+        //     'content' => 'First comment',
+        // ])->seeJson([
+        //     'content' => 'First comment',
+        // ]);
+
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+<xsi:Event xmlns:xsi="http://schema.broadsoft.com/xsi" xmlns:xsi1="http://www.w3.org/2001/XMLSchema-instance" xsi1:type="xsi:SubscriptionEvent">
+    <xsi:eventID>12345abc-12ab-12ab-12av-12345abcdefg</xsi:eventID>
+  <xsi:sequenceNumber>1</xsi:sequenceNumber>
+  <xsi:userId>userId</xsi:userId>
+  <xsi:externalApplicationId>CallCenterMonitoring</xsi:externalApplicationId>
+  <xsi:subscriptionId>12345abc-12ab-12ab-12av-12345abcdefg</xsi:subscriptionId>
+  <xsi:httpContact>
+    <xsi:uri>uri</xsi:uri>
+  </xsi:httpContact>
+  <xsi:targetId>targetId</xsi:targetId>
+  <xsi:eventData xsi1:type="xsi:CallCenterMonitoringEvent">
+    <xsi:monitoringStatus>
+      <xsi:averageHandlingTime>
+        <xsi:value>1</xsi:value>
+      </xsi:averageHandlingTime>
+      <xsi:expectedWaitTime>
+        <xsi:value>2</xsi:value>
+      </xsi:expectedWaitTime>
+      <xsi:averageSpeedOfAnswer>
+        <xsi:value>3</xsi:value>
+      </xsi:averageSpeedOfAnswer>
+      <xsi:longestWaitTime>
+        <xsi:value>4</xsi:value>
+      </xsi:longestWaitTime>
+      <xsi:numCallsInQueue>
+        <xsi:value>5</xsi:value>
+      </xsi:numCallsInQueue>
+      <xsi:numAgentsAssigned>6</xsi:numAgentsAssigned>
+      <xsi:numAgentsStaffed>7</xsi:numAgentsStaffed>
+      <xsi:numStaffedAgentsIdle>11</xsi:numStaffedAgentsIdle>
+      <xsi:numStaffedAgentsUnavailable>9</xsi:numStaffedAgentsUnavailable>
+    </xsi:monitoringStatus>
+  </xsi:eventData>
+</xsi:Event>';
+
+        // $response = $this->call($method, $uri, $parameters, $cookies, $files, $server, $content);
+        $response = $this->call('POST', 'bs/CallCenterMonitoring', [], [], [], [], $xml);
+        $this->assertContains('{"eventType":"CallCenterMonitoringEvent","eventID":"12345abc-12ab-12ab-12av-12345abcdefg","sequenceNumber":1,"subscriptionId":"12345abc-12ab-12ab-12av-12345abcdefg","targetId":"targetId","averageHandlingTime":1,"expectedWaitTime":2,"averageSpeedOfAnswer":3,"longestWaitTime":4,"numCallsInQueue":5,"numAgentsAssigned":6,"numAgentsStaffed":7,"numStaffedAgentsIdle":11,"numStaffedAgentsUnavailable":9}', $response->getContent());
+    }
+
     // /**
     // * @test
     // */

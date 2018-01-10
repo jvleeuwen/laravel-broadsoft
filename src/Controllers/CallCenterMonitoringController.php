@@ -27,6 +27,11 @@ class CallCenterMonitoringController extends Controller
         $xml = $this->xml->parse($request->getContent());
         $type = $this->xml->type($xml);
         $data = $this->broadsoft->$type($xml);
+        // if (App::environment('testing')) {
+
+        return $data;
+        // }
+
         return $this->broadsoft->SaveToDB($data);
     }
 }
