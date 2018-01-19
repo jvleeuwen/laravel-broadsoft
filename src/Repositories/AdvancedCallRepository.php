@@ -2,11 +2,12 @@
 
 namespace Jvleeuwen\Broadsoft\Repositories;
 
+use Jvleeuwen\Broadsoft\Database\Models\bsCallcenterMonitoring;
 use Jvleeuwen\Broadsoft\Models\CallCenterMonitoring;
-use Jvleeuwen\Broadsoft\Contracts\CallCenterMonitoringContract;
 use Jvleeuwen\Broadsoft\Models\Callcenter;
+use Jvleeuwen\Broadsoft\Contracts\AdvancedCallContract;
 
-class CallCenterMonitoringRepository implements CallCenterMonitoringContract
+class AdvancedCallRepository implements AdvancedCallContract
 {
     public function SaveToDB($CallCenterMonitoringArray)
     {
@@ -26,7 +27,7 @@ class CallCenterMonitoringRepository implements CallCenterMonitoringContract
         $numStaffedAgentsUnavailable = (int)$CallCenterMonitoringArray['numStaffedAgentsUnavailable'];
 
         $ExistingCallCenter = CallCenterMonitoring::where('targetId', $targetId)->first();
-        if (!$ExistingCallCenter) {
+        if (! $ExistingCallCenter) {
             $NewCallcenter = new CallCenterMonitoring;
             $NewCallcenter->eventType = $eventType;
             $NewCallcenter->eventID = $eventID;
@@ -42,7 +43,7 @@ class CallCenterMonitoringRepository implements CallCenterMonitoringContract
             $NewCallcenter->numAgentsStaffed = $numAgentsStaffed;
             $NewCallcenter->numStaffedAgentsIdle = $numStaffedAgentsIdle;
             $NewCallcenter->numStaffedAgentsUnavailable = $numStaffedAgentsUnavailable;
-            return $NewCallcenter->save();
+            $NewCallcenter->save();
         } else {
             $ExistingCallCenter->eventType = $eventType;
             $ExistingCallCenter->eventID = $eventID;
@@ -58,8 +59,9 @@ class CallCenterMonitoringRepository implements CallCenterMonitoringContract
             $ExistingCallCenter->numAgentsStaffed = $numAgentsStaffed;
             $ExistingCallCenter->numStaffedAgentsIdle = $numStaffedAgentsIdle;
             $ExistingCallCenter->numStaffedAgentsUnavailable = $numStaffedAgentsUnavailable;
-            return $ExistingCallCenter->save();
+            $ExistingCallCenter->save();
         }
+        return true;
     }
 
     public function GetCallCentersBySlug($slug)

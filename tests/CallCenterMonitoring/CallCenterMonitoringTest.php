@@ -4,15 +4,17 @@ namespace Jvleeuwen\Cspreporter\tests\CallCenterMonitoring;
 
 use Mockery as m;
 use callcentermonitoring;
-// use Orchestra\Testbench\TestCase;
 use Orchestra\Testbench\BrowserKit\TestCase;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Event;
 use Jvleeuwen\Broadsoft\BroadsoftServiceProvider;
 use Jvleeuwen\Broadsoft\Facades\CallCenterMonitoringFacade;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CallCenterMonitoringTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * @var Mockery\Mock
      */
@@ -36,6 +38,23 @@ class CallCenterMonitoringTest extends TestCase
     }
 
     /**
+     * Define environment setup.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     * @return void
+     */
+    protected function getEnvironmentSetUp($app)
+    {
+        // Setup default database to use sqlite :memory:
+        $app['config']->set('database.default', 'testbench');
+        $app['config']->set('database.connections.testbench', [
+            'driver' => 'sqlite',
+            'database' => ':memory:',
+            'prefix' => '',
+        ]);
+    }
+
+    /**
      * Setup the test environment.
      */
     protected function setUp()
@@ -43,7 +62,7 @@ class CallCenterMonitoringTest extends TestCase
         parent::setUp();
         $this->setUpMocks();
         $this->service_provider = new BroadsoftServiceProvider($this->application_mock);
-        // $this->CallCenterMonitoringContract = m::mock('Jvleeuwen\Broadsoft\Contracts\CallCenterMonitoringContract');
+        $this->loadLaravelMigrations(['--database' => 'testbench']);
     }
 
     /**
@@ -91,7 +110,7 @@ class CallCenterMonitoringTest extends TestCase
             'eventType' => 'CallCenterMonitoringEvent',
             'eventID' => '12345abc-12ab-12ab-12av-12345abcdefg',
             'sequenceNumber' => 1,
-            'subscriptionId' => '12345abc-12ab-12ab-12av-12345abcdefg',
+            'subscriptionId' => 'subscriptionId',
             'targetId' => 'targetId',
             'averageHandlingTime' => 1,
             'expectedWaitTime' => 2,
@@ -129,104 +148,48 @@ class CallCenterMonitoringTest extends TestCase
     /**
      * @test
      */
-    public function it_can_parse_incomming_requests()
+    public function it_can_parse_and_update_incomming_requests()
     {
-        // $crawler = $this->post('bs/CallCenterMonitoring', [
-        //     'content' => 'First comment',
-        // ])->seeJson([
-        //     'content' => 'First comment',
-        // ]);
-
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
-<xsi:Event xmlns:xsi="http://schema.broadsoft.com/xsi" xmlns:xsi1="http://www.w3.org/2001/XMLSchema-instance" xsi1:type="xsi:SubscriptionEvent">
-    <xsi:eventID>12345abc-12ab-12ab-12av-12345abcdefg</xsi:eventID>
-  <xsi:sequenceNumber>1</xsi:sequenceNumber>
-  <xsi:userId>userId</xsi:userId>
-  <xsi:externalApplicationId>CallCenterMonitoring</xsi:externalApplicationId>
-  <xsi:subscriptionId>12345abc-12ab-12ab-12av-12345abcdefg</xsi:subscriptionId>
-  <xsi:httpContact>
-    <xsi:uri>uri</xsi:uri>
-  </xsi:httpContact>
-  <xsi:targetId>targetId</xsi:targetId>
-  <xsi:eventData xsi1:type="xsi:CallCenterMonitoringEvent">
-    <xsi:monitoringStatus>
-      <xsi:averageHandlingTime>
-        <xsi:value>1</xsi:value>
-      </xsi:averageHandlingTime>
-      <xsi:expectedWaitTime>
-        <xsi:value>2</xsi:value>
-      </xsi:expectedWaitTime>
-      <xsi:averageSpeedOfAnswer>
-        <xsi:value>3</xsi:value>
-      </xsi:averageSpeedOfAnswer>
-      <xsi:longestWaitTime>
-        <xsi:value>4</xsi:value>
-      </xsi:longestWaitTime>
-      <xsi:numCallsInQueue>
-        <xsi:value>5</xsi:value>
-      </xsi:numCallsInQueue>
-      <xsi:numAgentsAssigned>6</xsi:numAgentsAssigned>
-      <xsi:numAgentsStaffed>7</xsi:numAgentsStaffed>
-      <xsi:numStaffedAgentsIdle>11</xsi:numStaffedAgentsIdle>
-      <xsi:numStaffedAgentsUnavailable>9</xsi:numStaffedAgentsUnavailable>
-    </xsi:monitoringStatus>
-  </xsi:eventData>
-</xsi:Event>';
+                <xsi:Event xmlns:xsi="http://schema.broadsoft.com/xsi" xmlns:xsi1="http://www.w3.org/2001/XMLSchema-instance" xsi1:type="xsi:SubscriptionEvent">
+                    <xsi:eventID>12345abc-12ab-12ab-12av-12345abcdefg</xsi:eventID>
+                <xsi:sequenceNumber>1</xsi:sequenceNumber>
+                <xsi:userId>userId</xsi:userId>
+                <xsi:externalApplicationId>CallCenterMonitoring</xsi:externalApplicationId>
+                <xsi:subscriptionId>subscriptionId</xsi:subscriptionId>
+                <xsi:httpContact>
+                    <xsi:uri>uri</xsi:uri>
+                </xsi:httpContact>
+                <xsi:targetId>targetId</xsi:targetId>
+                <xsi:eventData xsi1:type="xsi:CallCenterMonitoringEvent">
+                    <xsi:monitoringStatus>
+                    <xsi:averageHandlingTime>
+                        <xsi:value>1</xsi:value>
+                    </xsi:averageHandlingTime>
+                    <xsi:expectedWaitTime>
+                        <xsi:value>2</xsi:value>
+                    </xsi:expectedWaitTime>
+                    <xsi:averageSpeedOfAnswer>
+                        <xsi:value>3</xsi:value>
+                    </xsi:averageSpeedOfAnswer>
+                    <xsi:longestWaitTime>
+                        <xsi:value>4</xsi:value>
+                    </xsi:longestWaitTime>
+                    <xsi:numCallsInQueue>
+                        <xsi:value>5</xsi:value>
+                    </xsi:numCallsInQueue>
+                    <xsi:numAgentsAssigned>6</xsi:numAgentsAssigned>
+                    <xsi:numAgentsStaffed>7</xsi:numAgentsStaffed>
+                    <xsi:numStaffedAgentsIdle>11</xsi:numStaffedAgentsIdle>
+                    <xsi:numStaffedAgentsUnavailable>9</xsi:numStaffedAgentsUnavailable>
+                    </xsi:monitoringStatus>
+                </xsi:eventData>
+                </xsi:Event>';
 
-        // $response = $this->call($method, $uri, $parameters, $cookies, $files, $server, $content);
         $response = $this->call('POST', 'bs/CallCenterMonitoring', [], [], [], [], $xml);
-        $this->assertContains('{"eventType":"CallCenterMonitoringEvent","eventID":"12345abc-12ab-12ab-12av-12345abcdefg","sequenceNumber":1,"subscriptionId":"12345abc-12ab-12ab-12av-12345abcdefg","targetId":"targetId","averageHandlingTime":1,"expectedWaitTime":2,"averageSpeedOfAnswer":3,"longestWaitTime":4,"numCallsInQueue":5,"numAgentsAssigned":6,"numAgentsStaffed":7,"numStaffedAgentsIdle":11,"numStaffedAgentsUnavailable":9}', $response->getContent());
+        $response2 = $this->call('POST', 'bs/CallCenterMonitoring', [], [], [], [], $xml);
+
+        $this->assertSame(200, $response->status());
+        $this->assertSame(200, $response2->status());
     }
-
-    // /**
-    // * @test
-    // */
-    // public function it_can_parse_subscripiont_terminated_event()
-    // {
-    //     $this->markTestIncomplete('This test has not been implemented yet.');
-    // }
-
-    // /**
-    //  * @test
-    //  */
-    // public function it_provides_cspreporter()
-    // {
-    //     $this->assertInternalType('array', $this->service_provider->provides());
-    //     $this->assertSame('cspreporter', $this->service_provider->provides()[0]);
-    // }
-
-    // /**
-    //  * *@test
-    //  */
-    // public function it_can_load_rss()
-    // {
-    //     $this->assertInternalType('array', cspreporter::uri($this->file));
-    // }
-
-    // /**
-    //  * *@test
-    //  */
-    // public function it_can_parse_rss()
-    // {
-    //     $this->assertInternalType('array', cspreporter::ParseRss(cspreporter::file($this->file)));
-    // }
-
-    // /**
-    //  * @test
-    //  */
-    // public function it_can_parse_all_feed_item_fields()
-    // {
-    //     $feed = cspreporter::uri($this->file);
-    //     foreach ($feed as $item) {
-    //         $this->assertInternalType('integer', $item['id']);
-    //         $this->assertInternalType('string', $item['title']);
-    //         $this->assertInternalType('string', $item['description']);
-    //         $this->assertInternalType('string', $item['pubDate']);
-    //         $this->assertInternalType('string', $item['startDate']);
-    //         $this->assertInternalType('string', $item['endDate']);
-    //         $this->assertInternalType('string', $item['category']);
-    //         $this->assertInternalType('string', $item['link']);
-    //         $this->assertInternalType('array', $item['services']);
-    //     }
-    // }
 }

@@ -4,15 +4,14 @@ namespace Jvleeuwen\Broadsoft\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\App;
 use Jvleeuwen\Broadsoft\Services\XmlService;
-use Jvleeuwen\Broadsoft\Services\CallCenterMonitoringService;
+use Jvleeuwen\Broadsoft\Services\AdvancedCallService;
 
-class CallCenterMonitoringController extends Controller
+class AdvancedCallController extends Controller
 {
     private $xml;
 
-    public function __construct(XmlService $xml, CallCenterMonitoringService $broadsoft)
+    public function __construct(XmlService $xml, AdvancedCallService $broadsoft)
     {
         $this->xml = $xml;
         $this->broadsoft = $broadsoft;
@@ -26,10 +25,7 @@ class CallCenterMonitoringController extends Controller
         $xml = $this->xml->parse($request->getContent());
         $type = $this->xml->type($xml);
         $data = $this->broadsoft->$type($xml);
-        // if (App::environment('testing')) {
-        //     return $data;
-        // }
-
-        return $this->broadsoft->SaveToDB($data);
+        return $data;
+        // return $this->broadsoft->SaveToDB($data); // moet nog worden aangepast
     }
 }

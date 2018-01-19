@@ -26,7 +26,6 @@ class CallCenterMonitoringService
 
         try {
             return $this->$type($xml); # Call the type function like AgentStateEvent for further XML handling
-        // } catch (\BadMethodCallException $e) {
         } catch (\Error $e) {
             $data = array(
                 'class' => __CLASS__,
@@ -35,7 +34,6 @@ class CallCenterMonitoringService
                 'data' => json_decode(json_encode($xml)),
                 'trace' => (string)$e
             );
-            // $this->email->sendDebug( __CLASS__, $type, json_encode($xml), (string)$e, $req);
             Log::error($e);
             event(new ErrorEvent(['error' => (string)$e]));
             return('class ' .$type . ' not found');

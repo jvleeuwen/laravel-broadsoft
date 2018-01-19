@@ -97,9 +97,9 @@ class SubscriptionTerminatedTest extends TestCase
             'eventID' => '12345abc-12ab-12ab-12av-12345abcdefg',
             'sequenceNumber' => 1,
             'userId' => 'userId',
-            'subscriptionId' => '12345abc-12ab-12ab-12av-12345abcdefg',
-            'externalApplicationId' => 'CallCenterMonitoring',
-            'httpContact' => 'uri',
+            'subscriptionId' => 'subscriptionId',
+            'externalApplicationId' => 'externalApplicationId',
+            'httpContact' => 'uri'
         ];
         $this->assertSame($event, $expected);
     }
@@ -116,7 +116,7 @@ class SubscriptionTerminatedTest extends TestCase
     /**
     * @test
     */
-    public function it_can__not_get_the_event_type()
+    public function it_can_not_get_the_event_type()
     {
         // $req = File::get('tests/broken.xml');
 

@@ -4,9 +4,15 @@ namespace Jvleeuwen\Broadsoft;
 
 use Illuminate\Support\ServiceProvider;
 use Jvleeuwen\Broadsoft\Services\XmlService;
+use Jvleeuwen\Broadsoft\Contracts\AdvancedCallContract;
+use Jvleeuwen\Broadsoft\Services\CallCenterAgentService;
+use Jvleeuwen\Broadsoft\Contracts\CallCenterAgentContract;
+use Jvleeuwen\Broadsoft\Repositories\AdvancedCallRepository;
 use Jvleeuwen\Broadsoft\Services\CallCenterMonitoringService;
 use Jvleeuwen\Broadsoft\Contracts\CallCenterMonitoringContract;
+use Jvleeuwen\Broadsoft\Repositories\CallCenterAgentRepository;
 use Jvleeuwen\Broadsoft\Repositories\CallCenterMonitoringRepository;
+use Jvleeuwen\Broadsoft\Services\AdvancedCallService;
 
 class BroadsoftServiceProvider extends ServiceProvider
 {
@@ -17,8 +23,19 @@ class BroadsoftServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        /**
+         * Load Routes
+         */
         $this->loadRoutesFrom(__DIR__ . '/../routes/broadsoft.php');
+
+        /**
+         * Load Migrations
+         */
         $this->loadMigrationsFrom(__DIR__ . '/../migrations');
+
+        /**
+         * Publish configuration file.
+         */
         $this->publishes(['/../config/broadsoft.php' => config_path('broadsoft.php')]);
 
         /**
@@ -42,6 +59,9 @@ class BroadsoftServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        /**
+         * Call Center Monitoring
+         */
         $this->app->singleton(CallCenterMonitoringContract::class, CallCenterMonitoringRepository::class);
 
         $this->app->make('Jvleeuwen\Broadsoft\Controllers\CallCenterMonitoringController');
@@ -50,8 +70,31 @@ class BroadsoftServiceProvider extends ServiceProvider
             return new CallCenterMonitoringService($app->make(CallCenterMonitoringRepository::class));
         });
 
+        /**
+         * Global XML Service
+         */
         $this->app->singleton('xml', function () {
             return new XmlService;
+        });
+
+        /**
+         * Call Center Agent
+         */
+        $this->app->singleton(CallCenterAgentContract::class, CallCenterAgentRepository::class);
+
+        $this->app->make('Jvleeuwen\Broadsoft\Controllers\CallCenterAgentController');
+
+        $this->app->singleton('callcenteragent', function ($app) {
+            return new CallCenterAgentService($app->make(CallCenterAgentRepository::class));
+        });
+
+        /**
+         * Advanced Call
+         */
+        $this->app->singleton(AdvancedCallContract::class, AdvancedCallRepository::class);
+        $this->app->make('Jvleeuwen\Broadsoft\Controllers\AdvancedCallController');
+        $this->app->singleton('advancedcall', function ($app) {
+            return new AdvancedCallService($app->make(AdvancedCallRepository::class));
         });
     }
 
@@ -62,6 +105,6 @@ class BroadsoftServiceProvider extends ServiceProvider
     */
     public function provides()
     {
-        return ['callcentermonitoring', 'xml'];
+        return ['callcentermonitoring', 'callcenteragent', 'advancedcall', 'xml'];
     }
 }
