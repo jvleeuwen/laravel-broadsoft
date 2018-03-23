@@ -2,17 +2,15 @@
 
 namespace Jvleeuwen\Broadsoft\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\App;
 use Jvleeuwen\Broadsoft\Services\XmlService;
-use Jvleeuwen\Broadsoft\Services\CallCenterMonitoringService;
+use Jvleeuwen\Broadsoft\Services\CallCenterQueueService;
 
-class CallCenterMonitoringController extends Controller
+class CallCenterQueueController extends Controller
 {
     private $xml;
 
-    public function __construct(XmlService $xml, CallCenterMonitoringService $broadsoft)
+    public function __construct(XmlService $xml, CallCenterQueueService $broadsoft)
     {
         $this->xml = $xml;
         $this->broadsoft = $broadsoft;
@@ -29,7 +27,7 @@ class CallCenterMonitoringController extends Controller
         // if (App::environment('testing')) {
         //     return $data;
         // }
-
-        return $this->broadsoft->SaveToDB($data);
+        return $data;
+        // return $this->broadsoft->SaveToDB($data);
     }
 }

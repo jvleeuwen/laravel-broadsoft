@@ -1,0 +1,25 @@
+.tickets {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    font-size: var(--font-size-s);
+    font-size: 30px;
+}
+
+.tickets__label {
+    text-transform: uppercase;
+    font-size: var(--font-size-xs);
+    font-size: 30px;
+}
+
+.tickets__stars {
+    background-image: url('/images/svg/star.svg');
+}
+
+.tickets__count {
+    color: var(--yellow);
+    vertical-align: top;
+    white-space: nowrap;
+    font-weight: var(--font-weight-black);
+    font-size: 30px;
+}

@@ -1,0 +1,21 @@
+.queue__count {
+    color: var(--yellow);
+    font-weight: var(--font-weight-black);
+    display: block;
+    font-size:250px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.queue__green {
+    color: #093;
+}
+
+.queue__orange {
+    color: #faa51a;
+}
+
+.queue__red {
+    color: #B80000;
+}
