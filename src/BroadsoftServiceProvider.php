@@ -13,6 +13,9 @@ use Jvleeuwen\Broadsoft\Contracts\CallCenterMonitoringContract;
 use Jvleeuwen\Broadsoft\Repositories\CallCenterAgentRepository;
 use Jvleeuwen\Broadsoft\Repositories\CallCenterMonitoringRepository;
 use Jvleeuwen\Broadsoft\Services\AdvancedCallService;
+use Jvleeuwen\Broadsoft\Contracts\CallCenterQueueContract;
+use Jvleeuwen\Broadsoft\Repositories\CallCenterQueueRepository;
+use Jvleeuwen\Broadsoft\Services\CallCenterQueueService;
 
 class BroadsoftServiceProvider extends ServiceProvider
 {
@@ -96,6 +99,16 @@ class BroadsoftServiceProvider extends ServiceProvider
         $this->app->singleton('advancedcall', function ($app) {
             return new AdvancedCallService($app->make(AdvancedCallRepository::class));
         });
+
+        /**
+         * Call Center Queue
+         *
+         */
+        $this->app->singleton(CallCenterQueueContract::class, CallCenterQueueRepository::class);
+        $this->app->make('Jvleeuwen\Broadsoft\Controllers\CallCenterQueueController');
+        $this->app->singleton('callcenterqueue', function ($app) {
+            return new CallCenterQueueService($app->make(CallCenterQueueRepositorycompo::class));
+        });
     }
 
     /**
@@ -105,6 +118,6 @@ class BroadsoftServiceProvider extends ServiceProvider
     */
     public function provides()
     {
-        return ['callcentermonitoring', 'callcenteragent', 'advancedcall', 'xml'];
+        return ['callcentermonitoring', 'callcenteragent', 'advancedcall', 'callcenterqueue', 'xml'];
     }
 }
